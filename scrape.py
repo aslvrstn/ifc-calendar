@@ -6,7 +6,7 @@ import re
 import urllib2
 
 homepage = urllib2.urlopen('http://www.ifccenter.com/')
-soup = BeautifulSoup(homepage, 'html.parser')
+soup = BeautifulSoup(homepage, 'html5lib')
 
 cal = Calendar()
 cal.add('prodid', '-//My calendar product//mxm.dk//')
@@ -17,7 +17,7 @@ for div in soup.find_all('div', id=re.compile('day_.*')):
   showdate = datetime.strptime(partial_date, '%A, %B %d').replace(year=date.today().year)
   for movie in div.find_all('li'):
     movie_link = movie.a
-    movie_title = movie.a.string
+    movie_title = movie_link.string
     for showtime_str in movie.find_all('a', href=re.compile('http://www.movietickets.com/.*')):
       showtime = datetime.strptime(showtime_str.string, '%I:%M %p')
       naive_full_showtime = datetime.combine(showdate.date(), showtime.time())
